@@ -13,6 +13,7 @@ plugins/*/
 python/
 lib-common/
 lib-custom/
+spigot.jar
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
