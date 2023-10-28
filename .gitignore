@@ -1,3 +1,19 @@
+# Minecraft Server
+# https://minecraft.net/
+bundler/
+logs/
+world*/
+crash-reports/
+banned-*.json
+ops.json
+usercache.json
+whitelist.json
+eula.txt
+plugins/*/
+python/
+lib-common/
+lib-custom/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
