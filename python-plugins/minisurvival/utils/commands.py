@@ -8,19 +8,20 @@ from minisurvival.models import MinisurvivalBox
 
 @asynchronous()
 def prepare_minigame(caller, params):
-    if len(params) == 0:
+    players = filter(lambda p: p is not None, (player(p) for p in set(params)))
+
+    if len(players) == 0:
         yell('Usage: /minigame:prepare <player> [player] [player] ...')
+        yell('Also check if usernames are correct.')
         return
 
     yell('Preparing minigame for {} players'.format(len(params)))
 
-    plr = player(caller.getName())
+    position = lookingat(caller)
 
-    position = lookingat(plr)
+    box = MinisurvivalBox(
+        position,
+        players
+    )
 
-    dir1 = plr.getEyeLocation().getDirection()
-    yell('dir1.x: {}, dir1.y: {}, dir1.z: {}'.format(dir1.x, dir1.y, dir1.z))
-
-    size = [8, 10, 8]
-
-    box = MinisurvivalBox(*position, *size, params)
+    box.prepare()
