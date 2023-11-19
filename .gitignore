@@ -13,6 +13,7 @@ plugins/*/
 python/
 lib-common/
 lib-custom/
+site-packages/
 spigot.jar
 
 # Byte-compiled / optimized / DLL files
