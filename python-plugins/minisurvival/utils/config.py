@@ -18,7 +18,7 @@ from typing import Any, Dict
 keys = ["REDIS_REST_URL", "REDIS_REST_TOKEN"]
 
 
-class MinisurvivalConfig:
+class Config:
     """Config class for the plugin."""
 
     REDIS_REST_URL = ""
@@ -67,7 +67,7 @@ class MinisurvivalConfig:
                 if key not in keys:
                     continue
 
-                env_vars[key] = value
+                env_vars[key] = value.replace('"', "")
 
         return env_vars
 

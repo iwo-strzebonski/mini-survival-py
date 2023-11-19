@@ -19,8 +19,8 @@ from org.bukkit.entity import Entity  # type: ignore
 
 # pylint: enable=import-error
 
-from minisurvival.models import MinisurvivalConfig
 from minisurvival.utils.commands import prepare_minigame
+from minisurvival.utils.redis import RedisClient
 
 # pylint: enable=wrong-import-position
 
@@ -51,11 +51,16 @@ def get_direction(caller, _params):
 
     yell("biome: {}".format(biome))
 
-    yell("REDIS_REST_URL: {}".format(config.REDIS_REST_URL))
-    yell("REDIS_REST_TOKEN: {}".format(config.REDIS_REST_TOKEN))
+    redis_client = RedisClient()
 
+    response = redis_client.get("foo")
+    yell("foo is '{}'".format(response))
 
-config = MinisurvivalConfig()
+    redis_client.set("foo", "test")
+
+    response = redis_client.get("foo")
+    yell("foo is '{}'".format(response))
+
 
 add_commands(
     {"minigame:prepare": prepare_minigame, "minigame:direction": get_direction}
