@@ -1,8 +1,8 @@
 # pylint: disable=consider-using-f-string
+import json
+from typing import Union, Any
 
-from typing import Union, List, Any
-
-from minisurvival.utils.config import Config
+from minisurvival import Config
 from minisurvival.utils.requests import request
 
 
@@ -20,17 +20,21 @@ class RedisClient:
         # type: (str) -> Union[dict[str, Any], str]
         """Get the value for the given key."""
 
-        return request(
+        response = request(
             "{}/get/{}".format(self.__rest_url, key),
             headers={"Authorization": "Bearer {}".format(self.__rest_token)},
         )
+
+        return json.loads(response)["result"]
 
     def set(self, key, value):
         # type: (str, Union[dict[str, Any], str]) -> Union[dict[str, Any], str]
 
         """Set the value for the given key."""
 
-        return request(
+        response = request(
             "{}/set/{}/{}".format(self.__rest_url, key, value),
             headers={"Authorization": "Bearer {}".format(self.__rest_token)},
         )
+
+        return json.loads(response)["result"]

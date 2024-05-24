@@ -8,9 +8,9 @@ Returns:
 """
 
 # pylint: disable=consider-using-f-string
-
 # pylint: disable=unspecified-encoding
-from os.path import abspath, sep
+
+import os
 
 from typing import Any, Dict
 
@@ -23,6 +23,9 @@ class Config:
 
     REDIS_REST_URL = ""
     REDIS_REST_TOKEN = ""
+    MAPGEN_WORLDS = []  # type: list[str]
+
+    CHUNKDATA_DIR = os.path.join(os.getcwd(), "chunkdata")
 
     def __init__(self):
         # type: () -> None
@@ -57,7 +60,7 @@ class Config:
 
         env_vars = {}
 
-        with open("{}.env".format(abspath(".") + sep), "r") as f:
+        with open(os.path.join(os.getcwd(), ".env"), "r") as f:
             for line in f:
                 if line.startswith("#") or not line.strip():
                     continue

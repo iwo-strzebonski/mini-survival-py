@@ -4,9 +4,10 @@
 # pylint: disable=consider-using-f-string
 
 # pylint: disable=import-error
-from mcapi import WORLD, SERVER, parseargswithpos, synchronous  # type: ignore
-from org.bukkit import Bukkit, Material, Location  # type: ignore
+from mcapi import WORLD, SERVER, parseargswithpos, synchronous, asynchronous  # type: ignore
+from org.bukkit import Bukkit, Material, Location, ChunkSnapshot, World  # type: ignore
 from org.bukkit.block import CommandBlock  # type: ignore
+from org.bukkit.entity import Entity  # type: ignore
 
 # pylint: enable=import-error
 
@@ -107,3 +108,65 @@ def cuboid(*args, **kwargs):
     )
 
     return cmd
+
+
+def max_height_of_chunk(snapshot_chunk):
+    # type: (ChunkSnapshot) -> int
+    """
+    Get the maximum height of a chunk.
+    """
+
+    max_y = float("-inf")
+
+    for px in range(16):
+        for pz in range(16):
+            max_y = max(max_y, snapshot_chunk.getHighestBlockYAt(px, pz))
+
+    if max_y == float("-inf"):
+        raise ValueError("max_y is -inf")
+
+    return int(max_y)
+
+
+def get_blocks_in_chunk(snapshot_chunk, min_y):
+    # type: (ChunkSnapshot, int) -> list[list[list[str]]]
+    """
+    Get the blocks in a chunk.
+    """
+
+    max_y = max_height_of_chunk(snapshot_chunk)
+
+    chunk_blocks = [
+        [
+            [str(snapshot_chunk.getBlockType(px, py, pz)) for px in range(16)]
+            for pz in range(16)
+        ]
+        for py in range(min_y, max_y + 1)
+    ]
+
+    return chunk_blocks
+
+
+def get_world_with_params(caller, params):
+    # type: (Entity, list[str]) -> World
+    """
+    Get the world with the specified parameters.
+    """
+
+    world = None
+
+    if len(params) > 1:
+        raise ValueError("Too many parameters")
+
+    if len(params) == 1:
+        world = caller.getServer().getWorld(params[0])
+
+        if world is None:
+            raise ValueError("World {} not found".format(params[0]))
+    else:
+        try:
+            world = caller.getWorld()
+        except AttributeError:
+            world = WORLD
+
+    return world

@@ -15,6 +15,7 @@ lib-common/
 lib-custom/
 site-packages/
 spigot.jar
+chunkdata/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

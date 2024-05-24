@@ -1,8 +1,8 @@
 # pylint: disable=consider-using-f-string
 
-import json
-from urllib import urlencode
-import urllib2
+from urllib import urlencode  # type: ignore
+import urllib2  # type: ignore
+
 
 from typing import Union, Dict, Any
 from typing_extensions import Literal
@@ -14,8 +14,9 @@ def request(
     url,
     method="GET",
     headers=None,
+    data=None,
 ):
-    # type: (str, MethodEnum, Union[Dict[str, str], None]) -> Any
+    # type: (str, MethodEnum, Union[Dict[str, str], None], Union[Any, None]) -> Any
 
     """Makes a request to the given url.
 
@@ -27,20 +28,26 @@ def request(
     """
 
     if not url.startswith("http"):
-        raise ValueError(
-            "Incorrect and possibly insecure protocol in url: {}.".format(url)
-        )
+        # raise ValueError(
+        #     "Incorrect and possibly insecure protocol in url: {}.".format(url)
+        # )
+
+        print("Incorrect and possibly insecure protocol in url: {}.".format(url))
 
     headers = headers or {}
     headers.update({"Accept": "application/json"})
 
-    httprequest = urllib2.Request(url, headers=headers)
+    httprequest = (
+        urllib2.Request(url, headers=headers, data=data)
+        if method == "POST"
+        else urllib2.Request(url, headers=headers)
+    )
 
     result = None
 
     try:
         httpresponse = urllib2.urlopen(httprequest)
-        result = json.loads(httpresponse.read())["result"]
+        result = httpresponse.read()
     except urllib2.HTTPError as error:
         result = {
             "code": error.code,
